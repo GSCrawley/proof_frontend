@@ -14,7 +14,7 @@ function CareProviderSymptomFormScreen({route, navigation}) {
   const emptyList = () => {
     symptomsLst = []
   }
-
+// test
   const handleSymptomFormSend = async () => {
     const symptomsData = symptomsLst;
     try{
