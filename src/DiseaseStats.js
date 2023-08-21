@@ -43,20 +43,20 @@ function DiseaseStatsScreen({route, navigation}) {
     // fetchDiseaseURL();
     const fetchData = async () => {
       try {
-        const response = await axios.post(`http://localhost:8090/disease_stats`, {message, item},
+        const response = await axios.post(`${Durl}/disease_stats`, {message, item},
           {headers: {Authorization: `Bearer ${token}`}
         });
-        console.log(response)
-        // setCorrelatingDiseases(response.data[0])
-        // setPvalue(response.data[1])
-        // setCorrelatingSymptoms(response.data[2])
+        // console.log('TEST', response.data)
+        setCorrelatingDiseases(response.data[0])
+        setPvalue(response.data[1])
+        setCorrelatingSymptoms(response.data[2])
       } catch (error){
         console.error('Error fetching data:', error);
       }
     };
     const fetchMemo = async () => {
       try{
-        const response = await axios.post(`http://localhost:8090/disease_info`, {item},
+        const response = await axios.post(`${Durl}/disease_info`, {item},
           {headers: {Authorization: `Bearer ${token}`}
         });
         console.log("TEST:", response.data)
