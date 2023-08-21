@@ -5,12 +5,23 @@ import { useNavigation } from '@react-navigation/native';
 
 const SplashScreen = () => {
   const [data, setData] = useState(null);
+  const [cpdata, setCPDATA] = useState(null);
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.get('http://localhost:6000/');
+      const result = await axios.get('http://localhost:6000/patient_server');
+      
       setData(result.data.url);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios.get('http://localhost:6000/care_provider_server');
+      
+      setCPDATA(result.data.url);
     };
     fetchData();
   }, []);
@@ -19,7 +30,7 @@ const SplashScreen = () => {
     navigation.navigate('Login', { url: data });
   };
   const navigateToProviderLogin = () => {
-    navigation.navigate('ProviderLogin', { url: data });
+    navigation.navigate('ProviderLogin', { url: cpdata });
   };
 
   return (

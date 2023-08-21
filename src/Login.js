@@ -28,7 +28,7 @@ function LoginScreen({ route, navigation }) {
         } else if (error.request && connectionAttempts <= 5) {
           // Network error (request was made but no response received)
           const fetchData = async () => {
-            const result = await axios.get('http://localhost:6000/');
+            const result = await axios.get('http://localhost:6000/patient_server');
             url = result.data.url;
             connectionAttempts = connectionAttempts + 1
             handleLogin()
@@ -73,9 +73,9 @@ function LoginScreen({ route, navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('Registration', {url})}>
           <Text style={styles.link}>Don't have an account? Register here</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ProviderRegistration', {url})}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('ProviderRegistration', {url})}>
           <Text style={styles.link}>Care Provider Registration</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }

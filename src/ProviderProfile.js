@@ -86,6 +86,7 @@ function ProviderProfileScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      <Text>{url}</Text>
       <View style={styles.profileContainer}>
         <Image source={{ uri: profilePicUrl }} style={styles.profilePic} />
         <View style={styles.profileInfo}>

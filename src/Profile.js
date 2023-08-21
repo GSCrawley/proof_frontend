@@ -8,9 +8,19 @@ function ProfileScreen({ route, navigation }) {
   const [DOB, setDOB] = useState('');
   const [profilePicUrl, setProfilePicUrl] = useState('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
   const { token, url } = route.params;
+  const [data, setData] = useState(null);
 
   console.log('TOKEN: ', token);
   console.log(url);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios.get('http://localhost:6000/symptoms_server');
+      setData(result.data.url);
+      console.log("HA: ", result.data.url)
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchProtectedContent = async () => {
@@ -18,9 +28,13 @@ function ProfileScreen({ route, navigation }) {
         const response = await axios.get(`${url}/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setName(response.data.name);
+        setName(response.data.first_name);
         setDOB(response.data.DOB);
+
+        console.log("Hello")
+
       } catch (error) {
+        console.log("Nooooooo")
         console.error(error);
       }
     };
@@ -50,12 +64,12 @@ function ProfileScreen({ route, navigation }) {
         </View>
       </View>
       <View style={styles.history}>
-        <Text style={styles.historyText}>Patient History</Text>
+        <Text style={styles.historyText}>Patient Event History</Text>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Symptoms', { token, url })}
+          onPress={() => navigation.navigate('Symptoms', { token, url: data })}
         >
           <Text style={styles.buttonText}>Symptom Input Form</Text>
         </TouchableOpacity>

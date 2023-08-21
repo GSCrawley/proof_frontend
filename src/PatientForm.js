@@ -10,7 +10,7 @@ function PatientFormScreen({navigation}) {
     const handlePatientFormSend = async () => {
         const name = nameInput
         const age = ageInput
-        const response = await axios.post(`https://proof-flask-api.uw.r.appspot.com/patient/${age}`,{
+        const response = await axios.post(`http://localhost:6000/patient/${age}`,{
             // name: name,
             age: age,
         },{

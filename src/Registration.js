@@ -3,27 +3,34 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import axios from 'axios';
 
 function RegistrationScreen({ route, navigation }) {
-    const [nameInput, setNameInput] = useState('');
+    const [firstNameInput, setFirstNameInput] = useState('');
+    const [lastNameInput, setLastNameInput] = useState('');
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
     const [DOBInput, setDOBInput] = useState('');
+    const [locationInput, setLocationInput] = useState('')
+    const { url } = route.params;
   
     const handleRegistration = async () => {
-        const name = nameInput;
+        const firstName = firstNameInput;
+        const lastName = lastNameInput;
         const username = usernameInput;
         const password = passwordInput;
         const email = emailInput;
         const DOB = DOBInput;
-        const { url } = route.params;
+        const location = locationInput;
+        // const { url } = route.params;
 
 
         const response = await axios.post(`${url}/register`,{
-            name: name,
+            first_name: firstName,
+            last_name: lastName,
             username: username,
             password: password,
             email: email,
             DOB: DOB,
+            location: location,
         },{
             headers: {
                 'Content-Type': 'application/json',
@@ -36,11 +43,20 @@ function RegistrationScreen({ route, navigation }) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Registration Screen</Text>
+        <Text>{url}</Text>
         <TextInput
           style={styles.input}
-          placeholder="Name"
-          value={nameInput}
-          onChangeText={setNameInput}
+          placeholder="First Name"
+          value={firstNameInput}
+          onChangeText={setFirstNameInput}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          value={lastNameInput}
+          onChangeText={setLastNameInput}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -66,7 +82,7 @@ function RegistrationScreen({ route, navigation }) {
           placeholder="Email"
           value={emailInput}
           onChangeText={setEmailInput}
-          secureTextEntry={true}
+          // secureTextEntry={true}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -75,7 +91,16 @@ function RegistrationScreen({ route, navigation }) {
           placeholder="DOB"
           value={DOBInput}
           onChangeText={setDOBInput}
-          secureTextEntry={true}
+          // secureTextEntry={true}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Location"
+          value={locationInput}
+          onChangeText={setLocationInput}
+          // secureTextEntry={true}
           autoCapitalize="none"
           autoCorrect={false}
         />

@@ -8,6 +8,7 @@ function ProviderRegistrationScreen({ route, navigation }) {
     // const [patients, setPatientsInput] = useState('');
     const [emailInput, setEmailInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
+    const [locationInput, setLocationInput] = useState('');
   
     const handleRegistration = async () => {
         const name = nameInput;
@@ -16,6 +17,7 @@ function ProviderRegistrationScreen({ route, navigation }) {
         const email = emailInput;
         const password = passwordInput;
         const { url } = route.params;
+        const location = locationInput;
 
 
         const response = await axios.post(`${url}/provider-register`,{
@@ -23,6 +25,7 @@ function ProviderRegistrationScreen({ route, navigation }) {
             specialty: specialty,
             email: email,
             password: password,
+            location: location,
         },{
             headers: {
                 'Content-Type': 'application/json',
@@ -75,6 +78,15 @@ function ProviderRegistrationScreen({ route, navigation }) {
           value={specialtyInput}
           onChangeText={setSpecialtyInput}
           secureTextEntry={true}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Location"
+          value={locationInput}
+          onChangeText={setLocationInput}
+          // secureTextEntry={true}
           autoCapitalize="none"
           autoCorrect={false}
         />

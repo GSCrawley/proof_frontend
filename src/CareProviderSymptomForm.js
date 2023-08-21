@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {View, TextInput, Text, TouchableOpacity, ScrollView, StyleSheet, Keyboard} from 'react-native';
 import axios from 'axios';
 
@@ -10,20 +10,34 @@ function CareProviderSymptomFormScreen({route, navigation}) {
   const { token, inputValue } = route.params;
   var { url } = route.params;
   var connectionAttempts = 0;
+  const [durl, setURL] = useState([]);
   
   const emptyList = () => {
     symptomsLst = []
   }
+
+  useEffect(() => {
+    const fetchURL = async () => {
+      try {
+        const response = await fetch('http://localhost:6000/disease_server'); // Replace with your actual API URL
+        const data = await response.json();
+        setURL(data.url); // Once the data is fetched, update the 'url' state with the received URL
+      } catch (error) {
+        console.error('Error fetching URL:', error);
+      }
+    };
+    fetchURL();
+  }, []);
 // test
   const handleSymptomFormSend = async () => {
     const symptomsData = symptomsLst;
     try{
-        const response = await axios.post(`${url}/care-provider-symptoms`, {inputValue, symptomsData},
+        const response = await axios.post(`${url}/care_provider_symptoms`, {inputValue, symptomsData},
         {headers: {Authorization: `Bearer ${token}`}
         });
         setMessage(response.data);
         // console.log(response.data[1]);
-        navigation.navigate('ProviderDiagnosis', {message: response.data, url, token, inputValue});
+        navigation.navigate('ProviderDiagnosis', {message: response.data, url: durl, token, inputValue});
         emptyList()
     }catch(error){
       console.log(error);
@@ -63,6 +77,7 @@ function CareProviderSymptomFormScreen({route, navigation}) {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flax-start', right: "5%" }}>
+        <Text>{url}</Text>
         <Text style={styles.buttonText}>Provider Symptom Form</Text>
         <TextInput style={styles.input} value={symptom} onChangeText={text => setSymptom(text)} placeholder='Write a symptom'/>
         <TouchableOpacity style={styles.button} onPress={() => handleAddSymptom(symptom)}>

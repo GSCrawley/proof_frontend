@@ -7,14 +7,51 @@ function ProviderDiagnosisScreen({ route, navigation }) {
     const [text, setText] = useState('');
     const message = route.params.message;
     const [loading, setLoading] = useState(true);
-    const { token, url, inputValue } = route.params;
-    const diseaseListData = JSON.parse(message[1])
-    console.log(diseaseListData)
+    const { token, inputValue } = route.params;
+    var { url } = route.params;
+    // var [diseaseListData, setDiseaseListData] = useState('');
+    // console.log(diseaseListData)
+    connectionAttempts = 0;
+    const [diseaseListData, setDiseaseListData] = useState([]); // Updated this line
 
 
     const profileNav = () => {
         navigation.navigate('Profile', {token});
     };
+
+    useEffect(() => {
+      console.log("URL:", url)
+      const fetchData = async () => {
+        try{
+          console.log(message)
+          symptomsData = message;
+          const response = await axios.post(`${url}/care_provider_disease`, {symptomsData, inputValue},
+            {headers: {Authorization: `Bearer ${token}`}
+          });
+          // console.log(response.data[0])
+          // setText(response.data[0])
+          setDiseaseListData(response.data);
+          console.log(diseaseListData)
+        } catch (error) {
+          if (error.request && connectionAttempts <= 5) {
+            // Network error (request was made but no response received)
+            const fetchURLerr = async () => {
+              const result = await axios.get('http://localhost:6000/disease_server');
+              url = result.data.url;
+              connectionAttempts = connectionAttempts + 1
+            };
+            fetchURLerr();
+            // console.error('Network error:', error.request);
+            // Alert.alert('Error', 'Network error. Please check your connection.');
+          } else {
+            // Other errors
+            console.error('Error:', error.message);
+            Alert.alert('Error', 'An unexpected error occurred.');
+          }
+        };
+      };
+      fetchData();
+    }, []);
 
     useEffect(() => {
         if (message) {
@@ -24,18 +61,19 @@ function ProviderDiagnosisScreen({ route, navigation }) {
     }, [message]);
 
     const handleFormSend = (event, item) => {
-        navigation.navigate('DiseaseStats', {token, url, item, inputValue});
+        navigation.navigate('DiseaseStats', {token, url, item, inputValue, message});
     }
     return (
       <View>
+        <Text>{url}</Text>
         <Button title="Profile" onPress={profileNav}></Button>
         {/* <Text>Diagnosis</Text> */}
-        <View style={{backgroundColor:"white", borderWidth:"1", borderColor: "#ccc", padding: 10, borderRadius: 15, width: "90%", left: "5%"}}>
-          <Text>{message[0]}</Text>
-        </View>
+        {/* <View style={{backgroundColor:"white", borderWidth:"1", borderColor: "#ccc", padding: 10, borderRadius: 15, width: "90%", left: "5%"}}>
+          <Text>{text}</Text>
+        </View> */}
         <View>
           {diseaseListData.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.button} onPress={(event) => handleFormSend(event, item)}>
+            <TouchableOpacity key={index} style={styles.button} onPress={(event) => handleFormSend(event, item, url)}>
             <View>
                 <Text style={styles.buttonText}>{item}</Text>
             </View>

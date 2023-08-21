@@ -10,9 +10,19 @@ function PatientProfileScreen({route, navigation}) {
   var { url } = route.params;
   const [profilePicUrl, setProfilePicUrl] = useState('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
   var connectionAttempts = 0
+  const [data, setData] = useState(null);
 
   console.log("TOKEN: ", token)
   console.log(url)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios.get('http://localhost:6000/symptoms_server');
+      setData(result.data.url);
+      console.log("HA: ", result.data.url)
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchProtectedContent = async () => {
@@ -23,7 +33,8 @@ function PatientProfileScreen({route, navigation}) {
             headers: { Authorization: `Bearer ${token}` },
           });          
         // setContent(response.data.message);
-        setName(response.data.name)
+      
+        setName(response.data.first_name)
         setDOB(response.data.DOB)
       } catch (error) {
         console.error(error);
@@ -65,6 +76,7 @@ function PatientProfileScreen({route, navigation}) {
 
   return (
     <View style={styles.container}>
+      <Text>{url}</Text>
       <View style={styles.profileContainer}>
         <Image source={{ uri: profilePicUrl }} style={styles.profilePic} />
         <View style={styles.profileInfo}>
@@ -74,12 +86,12 @@ function PatientProfileScreen({route, navigation}) {
         </View>
       </View>
       <View style={styles.history}>
-        <Text style={styles.historyText}>Patient History</Text>
+        <Text style={styles.historyText}>Patient Event History</Text>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('CareProviderSymptoms', {token, url, inputValue})}
+          onPress={() => navigation.navigate('CareProviderSymptoms', {token, 'url':data, inputValue})}
         >
           <Text style={styles.buttonText}>Symptom Input Form</Text>
         </TouchableOpacity>
