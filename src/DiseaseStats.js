@@ -7,7 +7,7 @@ function DiseaseStatsScreen({route, navigation}) {
   const [name, setName] = useState('');
   const [DOB, setDOB] = useState('');
   const [url, setURL] = useState('');
-  const [Durl, setDURL] = useState('');
+  const [Durl, setDURL] = useState('http://localhost:8090'); // Make this dynamic
   const [LLMResponse, setLLMResponse] = useState('');
   const { token, item, inputValue, message } = route.params;
   const [pValue, setPvalue] = useState('');
@@ -20,68 +20,66 @@ function DiseaseStatsScreen({route, navigation}) {
   console.log(inputValue)
 
 
-  useEffect(() => {
+  useEffect( () => {
     const fetchURL = async () => {
       try {
-        const response = await fetch('http://localhost:6000/care_provider_server'); // Replace with your actual API URL
+        const response = await fetch('http://localhost:6000/care_provider_server');
         const data = await response.json();
-        setURL(data.url); // Once the data is fetched, update the 'url' state with the received URL
+        setURL(data.url);
       } catch (error) {
         console.error('Error fetching URL:', error);
       }
     };
-    const fetchDiseaseURL = async () => {
-      try{
-        const response = await fetch('http://localhost:6000/disease_server');
-        const data = await response.json()
-        setDURL(data.url)
-      }catch (error){
-        console.error('Error fetching URL:', error);
-      }
-    };
-    // fetchURL();
-    // fetchDiseaseURL();
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(`${Durl}/disease_stats`, {message, item},
-          {headers: {Authorization: `Bearer ${token}`}
-        });
-        // console.log('TEST', response.data)
-        setCorrelatingDiseases(response.data[0])
-        setPvalue(response.data[1])
-        setCorrelatingSymptoms(response.data[2])
-      } catch (error){
-        console.error('Error fetching data:', error);
-      }
-    };
-    const fetchMemo = async () => {
-      try{
-        const response = await axios.post(`${Durl}/disease_info`, {item},
-          {headers: {Authorization: `Bearer ${token}`}
-        });
-        console.log("TEST:", response.data)
-        setLLMResponse(response.data)
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+    fetchURL();
 
-    const instigate = async () => {
-      try{
-        fetchURL();
-        fetchDiseaseURL();
-        fetchData();
-        fetchMemo();
+    const fetchDiseaseURL = async () => {
+      try {
+        const response = await fetch('http://localhost:6000/disease_server');
+        const data = await response.json();
+        setDURL(data.url);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching disease URL:', error);
       }
     };
-    // fetchURL();
-    // fetchDiseaseURL();
-    // fetchData();
-    // fetchMemo();
+    fetchDiseaseURL();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(`${Durl}/disease_stats`, { message, item }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCorrelatingDiseases(response.data[0]);
+      setPvalue(response.data[1]);
+      setCorrelatingSymptoms(response.data[2]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const fetchMemo = async () => {
+    try {
+      const response = await axios.post(`${Durl}/disease_info`, { item }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setLLMResponse(response.data);
+    } catch (error) {
+      console.error('Error fetching memo data:', error);
+    }
+  };
+
+  useEffect(() => {
+    const instigate = async () => {
+      try {
+        await fetchMemo();  // Now it waits for fetchData to complete before fetching memo
+        await fetchData(); // Now it waits for fetchURL and fetchDiseaseURL to complete
+      } catch (error) {
+        console.error('Error during instigation:', error);
+      }
+    };
     instigate();
   }, []);
+
 
 //   useEffect(() => {
 //     const fetchProtectedContent = async () => {
@@ -116,6 +114,10 @@ function DiseaseStatsScreen({route, navigation}) {
         console.error(error);
         // Alert.alert('Error', 'Failed to fetch protected content');
     }
+  };
+
+  const navigateToRiskFactors = () => {
+    navigation.navigate('RiskFactors', {Durl, disease_name: item, token, url});
   };
 
   // const [message, setMessage] = useState(''); 
@@ -162,12 +164,19 @@ function DiseaseStatsScreen({route, navigation}) {
           ))}
         </View>
 
+        <TouchableOpacity style={styles.button} onPress={navigateToRiskFactors}>
+          <View>
+              <Text style={styles.buttonText}>Risk Factors</Text>
+          </View>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.button} onPress={diagnose}>
-            <View>
-                <Text style={styles.buttonText}>Diagnose</Text>
-            </View>
-          </TouchableOpacity>
+          <View>
+              <Text style={styles.buttonText}>Diagnose</Text>
+          </View>
+        </TouchableOpacity>
         {/* <Button title="Logout" onPress={handleLogout} /> */}
+        
       </View>
     </ScrollView>
   );
