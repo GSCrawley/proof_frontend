@@ -7,7 +7,7 @@ function ProviderDiagnosisScreen({ route, navigation }) {
     const [text, setText] = useState('');
     const message = route.params.message;
     const [loading, setLoading] = useState(true);
-    const { token, inputValue } = route.params;
+    const { token, patientID } = route.params;
     var { url } = route.params;
     // var [diseaseListData, setDiseaseListData] = useState('');
     // console.log(diseaseListData)
@@ -25,7 +25,7 @@ function ProviderDiagnosisScreen({ route, navigation }) {
         try{
           console.log(message)
           symptomsData = message;
-          const response = await axios.post(`${url}/care_provider_disease`, {symptomsData, inputValue},
+          const response = await axios.post(`${url}/care_provider_disease`, {symptomsData, patientID},
             {headers: {Authorization: `Bearer ${token}`}
           });
           // console.log(response.data[0])
@@ -61,7 +61,7 @@ function ProviderDiagnosisScreen({ route, navigation }) {
     }, [message]);
 
     const handleFormSend = (event, item) => {
-        navigation.navigate('DiseaseStats', {token, url, item, inputValue, message});
+        navigation.navigate('DiseaseStats', {token, url, item, message, patientID});
     }
     return (
       <View>

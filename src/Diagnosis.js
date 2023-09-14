@@ -27,6 +27,7 @@ function DiagnosisScreen({ route, navigation }) {
           });
           console.log(response.data)
           setText(response.data)
+
         } catch (error) {
           if (error.request && connectionAttempts <= 5) {
             // Network error (request was made but no response received)
@@ -47,6 +48,7 @@ function DiagnosisScreen({ route, navigation }) {
       };
       fetchData();
     }, []);
+
     useEffect(() => {
         if (message) {
             setText(message);

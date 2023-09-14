@@ -16,6 +16,7 @@ import CareProviderSymptomFormScreen from './src/CareProviderSymptomForm.js';
 import ProviderDiagnosisScreen from './src/ProviderDiagnosis.js';
 import DiseaseStatsScreen from './src/DiseaseStats.js';
 import RiskFactorsScreen from './src/RiskFactors.js';
+import RiskFactorsInputScreen from './src/RiskFactorsInput';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ function App() {
         <Stack.Screen name="ProviderDiagnosis" component={ProviderDiagnosisScreen} />
         <Stack.Screen name="DiseaseStats" component={DiseaseStatsScreen} />
         <Stack.Screen name="RiskFactors" component={RiskFactorsScreen} />
+        <Stack.Screen name="RiskFactorsInput" component={RiskFactorsInputScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

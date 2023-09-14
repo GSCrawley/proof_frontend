@@ -8,8 +8,9 @@ function DiseaseStatsScreen({route, navigation}) {
   const [DOB, setDOB] = useState('');
   const [url, setURL] = useState('');
   const [Durl, setDURL] = useState('http://localhost:8090'); // Make this dynamic
+  const [Rurl, setRURL] = useState('');
   const [LLMResponse, setLLMResponse] = useState('');
-  const { token, item, inputValue, message } = route.params;
+  const { token, item, patientID, message } = route.params;
   const [pValue, setPvalue] = useState('');
   const [correlatingDiseases, setCorrelatingDiseases] = useState(['Loading...']);
   const [correlatingSymptoms, setCorrelatingSymptoms] = useState(['Loading...'])
@@ -17,7 +18,7 @@ function DiseaseStatsScreen({route, navigation}) {
   console.log("TOKEN: ", token)
   console.log(url)
   console.log(item)
-  console.log(inputValue)
+  console.log(patientID)
 
 
   useEffect( () => {
@@ -42,6 +43,19 @@ function DiseaseStatsScreen({route, navigation}) {
       }
     };
     fetchDiseaseURL();
+
+    const fetchRiskURL = async () => {
+      try {
+        const response = await fetch('http://localhost:6000/risk_factors_server');
+        const data = await response.json();
+        setRURL(data.url);
+        console.log("RISK URL: ", Rurl)
+      } catch (error) {
+        console.error('Error fetching disease URL:', error);
+      }
+    };
+
+    fetchRiskURL();
   }, []);
 
   const fetchData = async () => {
@@ -117,7 +131,7 @@ function DiseaseStatsScreen({route, navigation}) {
   };
 
   const navigateToRiskFactors = () => {
-    navigation.navigate('RiskFactors', {Durl, disease_name: item, token, url});
+    navigation.navigate('RiskFactors', {Durl, disease_name: item, token, url, Rurl, patientID});
   };
 
   // const [message, setMessage] = useState(''); 

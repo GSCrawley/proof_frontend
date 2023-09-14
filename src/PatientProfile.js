@@ -95,6 +95,12 @@ function PatientProfileScreen({route, navigation}) {
         >
           <Text style={styles.buttonText}>Symptom Input Form</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('RiskFactorsInput', {token, 'url':data, 'patientID': inputValue})}
+        >
+          <Text style={styles.buttonText}>Risk Factors Input Form</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Text style={styles.buttonText}>Log out</Text>
         </TouchableOpacity>

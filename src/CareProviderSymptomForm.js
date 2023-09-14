@@ -37,7 +37,7 @@ function CareProviderSymptomFormScreen({route, navigation}) {
         });
         setMessage(response.data);
         // console.log(response.data[1]);
-        navigation.navigate('ProviderDiagnosis', {message: response.data, url: durl, token, inputValue});
+        navigation.navigate('ProviderDiagnosis', {message: response.data, url: durl, token, patientID: inputValue});
         emptyList()
     }catch(error){
       console.log(error);
