@@ -7,18 +7,20 @@ function RiskFactorsScreen({ route, navigation }) {
   const [data, setData] = useState(null);
   const { Durl, disease_name, token, url, Rurl, patientID } = route.params;
   const [riskListData, setRiskListData] = useState([]);
+  const [patientRiskList, setPatientRiskList] = useState([]);
   const [pressedButtons, setPressedButtons] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]); // Add selected items state
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(`${Rurl}/risk_factors`, { disease_name }, {
+        const response = await axios.post(`${Rurl}/risk_factors`, { disease_name, patientID }, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log(response.data)
         setData(response.data)
-        setRiskListData(response.data);
+        setRiskListData(response.data[0]);
+        setPatientRiskList(response.data[1])
         console.log(riskListData)
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -72,6 +74,21 @@ function RiskFactorsScreen({ route, navigation }) {
         <Text>{disease_name}</Text>
         <Text>{data}</Text>
         <View>
+        {patientRiskList.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.button,
+                styles.greenButton,
+              ]}
+              onPress={(event) => addRisk(event, item, url)}
+            >
+              <View>
+                <Text style={styles.buttonText}>{item}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+
           {riskListData.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -87,10 +104,10 @@ function RiskFactorsScreen({ route, navigation }) {
             </TouchableOpacity>
           ))}
           <TouchableOpacity style={styles.button} onPress={handleFormSend}>
-          <View>
-              <Text style={styles.buttonText}>Submit</Text>
-          </View>
-        </TouchableOpacity>
+            <View>
+                <Text style={styles.buttonText}>Submit</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>

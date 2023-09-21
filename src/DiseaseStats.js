@@ -117,7 +117,7 @@ function DiseaseStatsScreen({route, navigation}) {
     try {
         const response = await axios.post(`${url}/diagnose`, {
             disease_name: item,
-            patient_id: inputValue
+            patient_id: patientID
             }, {
             headers: { Authorization: `Bearer ${token}` },
             });          
