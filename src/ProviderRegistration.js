@@ -9,6 +9,7 @@ function ProviderRegistrationScreen({ route, navigation }) {
     const [emailInput, setEmailInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
     const [locationInput, setLocationInput] = useState('');
+    const { url } = route.params;
   
     const handleRegistration = async () => {
         const name = nameInput;
@@ -16,7 +17,7 @@ function ProviderRegistrationScreen({ route, navigation }) {
         const specialty = specialtyInput;
         const email = emailInput;
         const password = passwordInput;
-        const { url } = route.params;
+        // const { url } = route.params;
         const location = locationInput;
 
 
@@ -32,7 +33,7 @@ function ProviderRegistrationScreen({ route, navigation }) {
             }
         })
         console.log(response.data)
-        navigation.navigate('Login', {url});
+        navigation.navigate('ProviderLogin', {url});
     };
   
     return (

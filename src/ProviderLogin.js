@@ -45,6 +45,7 @@ function ProviderLoginScreen({ route, navigation }) {
             }
           }
     };
+    console.log("URL", url)
   
     return (
       <View style={styles.container}>

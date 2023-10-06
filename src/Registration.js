@@ -20,7 +20,7 @@ function RegistrationScreen({ route, navigation }) {
         const email = emailInput;
         const DOB = DOBInput;
         const location = locationInput;
-        // const { url } = route.params;
+        const { url } = route.params;
 
 
         const response = await axios.post(`${url}/register`,{
@@ -39,6 +39,7 @@ function RegistrationScreen({ route, navigation }) {
         console.log(response.data)
         navigation.navigate('Login', {url});
     };
+    console.log(url)
   
     return (
       <View style={styles.container}>

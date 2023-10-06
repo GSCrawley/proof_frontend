@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, Button, Alert, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Button, Alert, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
 import axios from 'axios';
 
 function PatientProfileScreen({route, navigation}) {
@@ -11,6 +11,7 @@ function PatientProfileScreen({route, navigation}) {
   const [profilePicUrl, setProfilePicUrl] = useState('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
   var connectionAttempts = 0
   const [data, setData] = useState(null);
+  const [events, setEvents] = useState(null);
 
   console.log("TOKEN: ", token)
   console.log(url)
@@ -36,6 +37,8 @@ function PatientProfileScreen({route, navigation}) {
       
         setName(response.data.first_name)
         setDOB(response.data.DOB)
+        setEvents(response.data.events)
+        console.log(response.data.events)
       } catch (error) {
         console.error(error);
         if (error.request && connectionAttempts <= 5) {
@@ -87,6 +90,16 @@ function PatientProfileScreen({route, navigation}) {
       </View>
       <View style={styles.history}>
         <Text style={styles.historyText}>Patient Event History</Text>
+        {events && (
+        <ScrollView>
+          {Object.entries(events).reverse().map(([timestamp, eventId]) => (
+            <View key={timestamp}>
+              <Text>{timestamp}</Text>
+              <Text>{eventId}</Text>
+            </View>
+          ))}
+        </ScrollView>
+        )}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
