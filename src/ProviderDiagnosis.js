@@ -61,7 +61,7 @@ function ProviderDiagnosisScreen({ route, navigation }) {
     }, [message]);
 
     const handleFormSend = (event, item) => {
-        navigation.navigate('DiseaseStats', {token, url, item, message, patientID});
+        navigation.navigate('DiseaseStats', {token, Durl:url, item, message, patientID});
     }
     return (
       <View>
